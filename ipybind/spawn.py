@@ -42,7 +42,7 @@ def spawn_fn(mode, handler=None, log_commands=False):
         if dry_run:
             return
         if log_commands:
-            distutils.log.info(' '.join(distutils.spawn._nt_quote_args(list(cmd))))
+            distutils.log.info(' '.join((list(cmd)))) #distutils.spawn._nt_quote_args
         try:
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             out, _ = p.communicate()
