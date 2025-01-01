@@ -2,7 +2,6 @@
 
 import contextlib
 import functools
-import imp
 import os
 import shlex
 import sys
