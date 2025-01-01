@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*_
 
 import hashlib
-import imp
+import importlib.util
+import types
 import os
 import shlex
 import sys
@@ -155,11 +156,25 @@ class Pybind11Magics(Magics):
                 cmdclass={'build_ext': build_ext}
             )
 
-    def import_module(self, module, libfile, import_symbols=True):
-        mod = imp.load_dynamic(module, libfile)
-        if import_symbols:
-            for k, v in mod.__dict__.items():
-                if not k.startswith('__'):
-                    self.shell.push({k: v})
-        else:
-            self.shell.push({mod.__name__: mod})
+def import_module(self, module, libfile, import_symbols=True):
+    # Load the module dynamically using importlib
+    spec = importlib.util.spec_from_file_location(module, libfile)
+    if spec is None:
+        raise ImportError(f"Can't find module '{module}'")
+    
+    # Create a new module based on the spec
+    mod = importlib.util.module_from_spec(spec)
+    
+    # Execute the module to populate it
+    spec.loader.exec_module(mod)
+    
+    # Add the module to sys.modules
+    sys.modules[module] = mod
+    
+    # Import symbols into the shell's namespace if required
+    if import_symbols:
+        for k, v in mod.__dict__.items():
+            if not k.startswith('__'):
+                self.shell.push({k: v})
+    else:
+        self.shell.push({mod.__name__: mod})
