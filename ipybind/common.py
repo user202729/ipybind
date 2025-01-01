@@ -38,8 +38,6 @@ def is_osx():
 @functools.lru_cache()
 def ext_suffix():
     """Get extension suffix for C extensions on this platform."""
-    if is_win():
-        return imp.get_suffixes()[0][0]
     return sysconfig.get_config_var('EXT_SUFFIX')
 
 
