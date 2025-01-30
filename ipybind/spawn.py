@@ -4,6 +4,7 @@ import contextlib
 import os
 import subprocess
 import sys
+import shutil
 
 import distutils.errors
 import distutils.spawn
@@ -38,7 +39,7 @@ def spawn_fn(mode, handler=None, log_commands=False):
     def spawn(cmd, search_path=True, verbose=False, dry_run=False):
         cmd = list(cmd)
         if search_path:
-            cmd[0] = distutils.spawn.find_executable(cmd[0]) or cmd[0]
+            cmd[0] = shutil.which(cmd[0]) or cmd[0]
         if dry_run:
             return
         if log_commands:
