@@ -34,10 +34,8 @@ In all examples that follow we assume that the extension has been previously loa
 ```cpp
 %%pybind11
 
-PYBIND11_PLUGIN(example) {
-    py::module m("example");
+PYBIND11_MODULE(example, m) {
     m.def("add", [](int x, int y) { return x + y; });
-    return m.ptr();
 }
 ```
 
@@ -78,10 +76,8 @@ The following example should compile silently if built via `%%pybind11` with no 
 ```cpp
 %%pybind11 -vf;
 
-PYBIND11_PLUGIN(example) {
+PYBIND11_MODULE(example, m) {
     int x;                    // cell line 4
-    py::module m("example");
-    return m.ptr();
 }
 ```
 
